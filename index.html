@@ -121,85 +121,9 @@
   .pill:hover { border-color: var(--base-black); background: var(--white); }
   .pill.active { background: var(--base-black); color: var(--white); border-color: var(--base-black); }
 
-  /* Multi-Select */
-  .multi-select-wrap { position: relative; }
-  .tag-area {
-    display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px;
-    border: 1.5px solid var(--sand-300); border-radius: var(--radius-sm);
-    background: var(--sand-100); min-height: 42px; cursor: pointer;
-    transition: border-color var(--transition), background var(--transition);
-    align-items: center;
-  }
-  .tag-area:hover { border-color: var(--base-black); background: var(--white); }
-  .tag-area.active { border-color: var(--base-black); background: var(--white); box-shadow: 0 0 0 3px rgba(29,28,27,0.06); }
-  .tag-area .placeholder-text { color: var(--grey-300); font-size: 14px; }
-  .tag {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: var(--base-black); color: var(--white);
-    padding: 3px 8px 3px 10px; border-radius: 20px;
-    font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap;
-  }
-  .tag .remove-tag {
-    cursor: pointer; opacity: 0.6; font-size: 14px; line-height: 1;
-    transition: opacity var(--transition); display: flex; align-items: center;
-  }
-  .tag .remove-tag:hover { opacity: 1; }
-  .multi-dropdown {
-    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-    background: var(--white); border: 1.5px solid var(--sand-300);
-    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
-    z-index: 100; max-height: 240px; overflow-y: auto; padding: 4px;
-  }
-  .multi-dropdown.open { display: block; }
-  .multi-option {
-    padding: 9px 12px; font-size: 13px; cursor: pointer; border-radius: 4px;
-    transition: background var(--transition); display: flex; align-items: center;
-    gap: 8px; color: var(--base-black);
-  }
-  .multi-option:hover { background: var(--sand-100); }
-  .multi-option .check-box {
-    width: 16px; height: 16px; border: 1.5px solid var(--sand-600);
-    border-radius: 3px; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all var(--transition);
-  }
-  .multi-option.selected .check-box { background: var(--base-black); border-color: var(--base-black); }
-  .multi-option.selected .check-box::after { content: '✓'; color: var(--white); font-size: 10px; font-weight: 700; }
-
   /* Conditional */
   .conditional { display: none; margin-top: 12px; }
   .conditional.visible { display: block; }
-
-  /* Custom Select */
-  .custom-select { position: relative; }
-  .select-trigger {
-    width: 100%; padding: 10px 14px; padding-right: 36px;
-    border: 1.5px solid var(--sand-300); border-radius: var(--radius-sm);
-    font-family: inherit; font-size: 14px; color: var(--base-black);
-    background: var(--sand-100); cursor: pointer;
-    transition: border-color var(--transition), background var(--transition);
-    text-align: left; appearance: none; position: relative;
-  }
-  .select-trigger.placeholder { color: var(--grey-300); }
-  .select-trigger::after {
-    content: ''; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    width: 0; height: 0; border-left: 4px solid transparent;
-    border-right: 4px solid transparent; border-top: 5px solid var(--grey-400);
-    pointer-events: none;
-  }
-  .select-trigger:hover, .select-trigger:focus { border-color: var(--base-black); background: var(--white); outline: none; }
-  .select-dropdown {
-    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-    background: var(--white); border: 1.5px solid var(--sand-300);
-    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
-    z-index: 100; max-height: 240px; overflow-y: auto; padding: 4px;
-  }
-  .select-dropdown.open { display: block; }
-  .select-option {
-    padding: 9px 12px; font-size: 13px; cursor: pointer;
-    border-radius: 4px; transition: background var(--transition); color: var(--base-black);
-  }
-  .select-option:hover { background: var(--sand-100); }
-  .select-option.selected { background: var(--sand-200); font-weight: 600; }
 
   /* Submit */
   .submit-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
@@ -229,7 +153,7 @@
 <div class="page-wrapper">
   <header class="header">
     <div class="logo"><img src="BlckBx%20PNG.png" alt="BlckBx"></div>
-    <div class="client-badge" id="clientBadge"><span class="dot"></span> Loading...</div>
+    <div class="client-badge" id="clientBadge"><span class="dot"></span> Client Feedback</div>
   </header>
   <p class="page-subtitle">Client feedback call — fill this out during the call, then submit to save.</p>
 
@@ -247,14 +171,6 @@
           <label>Last Name</label>
           <input type="text" name="lastName" placeholder="e.g. Mitchell">
         </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="sarah@company.com">
-        </div>
-        <div class="field">
-          <label>Phone</label>
-          <input type="tel" name="phone" placeholder="+44 7700 900000">
-        </div>
         <div class="field full">
           <label>Assistant Name</label>
           <input type="text" name="assistantName" placeholder="e.g. Jessica">
@@ -266,6 +182,11 @@
     <div class="section">
       <div class="section-label">Service Feedback — General</div>
       
+      <div class="field">
+        <label>How are you finding the service overall?</label>
+        <textarea name="serviceFeedback" placeholder="Open-ended feedback about their experience with BlckBx..."></textarea>
+      </div>
+
       <div class="field">
         <label>On a scale of 1-10, how much has BlckBx simplified your daily routine?</label>
         <div class="score-slider" data-name="routineSimplifiedScore">
@@ -283,23 +204,6 @@
           </div>
         </div>
       </div>
-
-      <div class="field">
-        <label>What is still a pain point that BlckBx hasn't been able to solve yet?</label>
-        <textarea name="painPoints" placeholder="Any areas where we're not helping enough..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Is there anything you'd like to pass to your assistant but find yourself doing instead?</label>
-        <div class="pill-group" data-name="tasksDoingYourself">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-        </div>
-        <div class="conditional" id="tasksDoingYourselfDetails">
-          <label class="helper">What stops you from passing it to your assistant?</label>
-          <textarea name="tasksDoingYourselfDetails" placeholder="Describe the task and what's holding you back..."></textarea>
-        </div>
-      </div>
     </div>
 
     <!-- Service Feedback - App -->
@@ -307,69 +211,8 @@
       <div class="section-label">Service Feedback — App</div>
       
       <div class="field">
-        <label>When you open the app, what's usually the first thing you're looking to do?</label>
-        <textarea name="firstThingInApp" placeholder="e.g. Check task status, send a new request..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>How easy do you find the app to use? (1-10)</label>
-        <div class="score-slider" data-name="appEaseScore">
-          <div class="score-options">
-            <button type="button" class="score-btn" data-value="1">1</button>
-            <button type="button" class="score-btn" data-value="2">2</button>
-            <button type="button" class="score-btn" data-value="3">3</button>
-            <button type="button" class="score-btn" data-value="4">4</button>
-            <button type="button" class="score-btn" data-value="5">5</button>
-            <button type="button" class="score-btn" data-value="6">6</button>
-            <button type="button" class="score-btn" data-value="7">7</button>
-            <button type="button" class="score-btn" data-value="8">8</button>
-            <button type="button" class="score-btn" data-value="9">9</button>
-            <button type="button" class="score-btn" data-value="10">10</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Any improvements or features you'd like to see?</label>
-        <textarea name="appImprovements" placeholder="Ideas for the app or service..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Positive App Feedback <span class="optional">(select all that apply)</span></label>
-        <div class="multi-select-wrap" data-name="positiveAppBuzzwords">
-          <div class="tag-area"><span class="placeholder-text">Select feedback...</span></div>
-          <div class="multi-dropdown">
-            <div class="multi-option" data-value="Onboarding: Smooth and easy setup process"><span class="check-box"></span>Onboarding: Smooth and easy setup</div>
-            <div class="multi-option" data-value="Interface: Clean, minimalist, easy to use, and intuitive UI"><span class="check-box"></span>Interface: Clean, intuitive UI</div>
-            <div class="multi-option" data-value="Speed: App is highly responsive with no lag"><span class="check-box"></span>Speed: Highly responsive</div>
-            <div class="multi-option" data-value="Reliability: Zero crashes or technical glitches"><span class="check-box"></span>Reliability: No crashes</div>
-            <div class="multi-option" data-value="Communication: Chat interface feels natural and organised"><span class="check-box"></span>Communication: Natural chat</div>
-            <div class="multi-option" data-value="Task Management: Easy to track the status of my requests"><span class="check-box"></span>Task Management: Easy to track</div>
-            <div class="multi-option" data-value="Notifications: Alerts are timely and helpful, not intrusive"><span class="check-box"></span>Notifications: Timely, helpful</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Negative App Feedback <span class="optional">(select all that apply)</span></label>
-        <div class="multi-select-wrap" data-name="negativeAppBuzzwords">
-          <div class="tag-area"><span class="placeholder-text">Select feedback...</span></div>
-          <div class="multi-dropdown">
-            <div class="multi-option" data-value="Onboarding: Set up was slow / frustrating / unclear"><span class="check-box"></span>Onboarding: Slow/frustrating setup</div>
-            <div class="multi-option" data-value="Navigation: Found it difficult to find specific features"><span class="check-box"></span>Navigation: Hard to find features</div>
-            <div class="multi-option" data-value="Performance: App feels slow or heavy to load"><span class="check-box"></span>Performance: Slow to load</div>
-            <div class="multi-option" data-value="Stability: Experienced frequent crashes or freezes"><span class="check-box"></span>Stability: Crashes/freezes</div>
-            <div class="multi-option" data-value="Interface: Uncomfortable to look at, feels overwhelmed with too much info"><span class="check-box"></span>Interface: Overwhelming</div>
-            <div class="multi-option" data-value="Connectivity: Issues syncing data or staying logged in"><span class="check-box"></span>Connectivity: Sync issues</div>
-            <div class="multi-option" data-value="Input Hurdles: Difficult to upload files or voice notes"><span class="check-box"></span>Input: Difficult uploads</div>
-            <div class="multi-option" data-value="Notifications: Receiving too many irrelevant alerts"><span class="check-box"></span>Notifications: Too many alerts</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>App Feedback Summary</label>
-        <textarea name="appFeedbackSummary" placeholder="Summary of their overall app experience..."></textarea>
+        <label>How are you finding the app? Is it easy to use, any issues?</label>
+        <textarea name="appFeedback" placeholder="Feedback on the app experience, usability, any problems..."></textarea>
       </div>
     </div>
 
@@ -378,152 +221,8 @@
       <div class="section-label">Service Feedback — Assistant</div>
       
       <div class="field">
-        <label>How often does your assistant get a task right on the first try?</label>
-        <div class="custom-select" data-name="taskRightFirstTimePercent">
-          <button type="button" class="select-trigger placeholder">Select percentage...</button>
-          <div class="select-dropdown">
-            <div class="select-option" data-value="0-25%">0-25%</div>
-            <div class="select-option" data-value="25-50%">25-50%</div>
-            <div class="select-option" data-value="50-75%">50-75%</div>
-            <div class="select-option" data-value="75-90%">75-90%</div>
-            <div class="select-option" data-value="90-100%">90-100%</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>How confident do you feel giving your assistant a big life task? (1-10)</label>
-        <div class="score-slider" data-name="confidenceBigTaskScore">
-          <div class="score-options">
-            <button type="button" class="score-btn" data-value="1">1</button>
-            <button type="button" class="score-btn" data-value="2">2</button>
-            <button type="button" class="score-btn" data-value="3">3</button>
-            <button type="button" class="score-btn" data-value="4">4</button>
-            <button type="button" class="score-btn" data-value="5">5</button>
-            <button type="button" class="score-btn" data-value="6">6</button>
-            <button type="button" class="score-btn" data-value="7">7</button>
-            <button type="button" class="score-btn" data-value="8">8</button>
-            <button type="button" class="score-btn" data-value="9">9</button>
-            <button type="button" class="score-btn" data-value="10">10</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>How do you feel about the tone of communication? Professional enough, or more casual?</label>
-        <textarea name="communicationToneFeedback" placeholder="Their thoughts on communication style..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Do you feel like your assistant 'gets' your personality and preferences yet?</label>
-        <div class="pill-group" data-name="assistantGetsPersonality">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>How would you rate your assistant's communication? (1-10)</label>
-        <div class="score-slider" data-name="communicationRatingScore">
-          <div class="score-options">
-            <button type="button" class="score-btn" data-value="1">1</button>
-            <button type="button" class="score-btn" data-value="2">2</button>
-            <button type="button" class="score-btn" data-value="3">3</button>
-            <button type="button" class="score-btn" data-value="4">4</button>
-            <button type="button" class="score-btn" data-value="5">5</button>
-            <button type="button" class="score-btn" data-value="6">6</button>
-            <button type="button" class="score-btn" data-value="7">7</button>
-            <button type="button" class="score-btn" data-value="8">8</button>
-            <button type="button" class="score-btn" data-value="9">9</button>
-            <button type="button" class="score-btn" data-value="10">10</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Are you satisfied with how quickly the assistant acknowledges requests?</label>
-        <div class="pill-group" data-name="acknowledgementSatisfied">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Have you ever felt that a task took longer than it should have?</label>
-        <div class="pill-group" data-name="taskTookTooLong">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-        </div>
-        <div class="conditional" id="taskTookTooLongDetails">
-          <textarea name="taskTookTooLongDetails" placeholder="Which task and what happened..."></textarea>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Has your assistant ever suggested a solution or task idea you hadn't thought of?</label>
-        <div class="pill-group" data-name="assistantSuggestedSolutions">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Positive Assistant Feedback <span class="optional">(select all that apply)</span></label>
-        <div class="multi-select-wrap" data-name="positiveAssistantBuzzwords">
-          <div class="tag-area"><span class="placeholder-text">Select feedback...</span></div>
-          <div class="multi-dropdown">
-            <div class="multi-option" data-value="Proactive"><span class="check-box"></span>Proactive</div>
-            <div class="multi-option" data-value="Detail-Oriented"><span class="check-box"></span>Detail-Oriented</div>
-            <div class="multi-option" data-value="Natural Communication"><span class="check-box"></span>Natural Communication</div>
-            <div class="multi-option" data-value="Highly Reliable"><span class="check-box"></span>Highly Reliable</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Negative Assistant Feedback <span class="optional">(select all that apply)</span></label>
-        <div class="multi-select-wrap" data-name="negativeAssistantBuzzwords">
-          <div class="tag-area"><span class="placeholder-text">Select feedback...</span></div>
-          <div class="multi-dropdown">
-            <div class="multi-option" data-value="Requires Heavy Instruction"><span class="check-box"></span>Requires Heavy Instruction</div>
-            <div class="multi-option" data-value="Communication Lag"><span class="check-box"></span>Communication Lag</div>
-            <div class="multi-option" data-value="Lack of Attention to Detail"><span class="check-box"></span>Lack of Attention to Detail</div>
-            <div class="multi-option" data-value="Tone Mismatch"><span class="check-box"></span>Tone Mismatch</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Assistant Feedback Summary</label>
-        <textarea name="assistantFeedbackSummary" placeholder="Summary of their overall assistant experience..."></textarea>
-      </div>
-    </div>
-
-    <!-- Preferences -->
-    <div class="section">
-      <div class="section-label">Preferences & Updates</div>
-      
-      <div class="field">
-        <label>Any changes to daily routine or habits we should know about?</label>
-        <p class="helper">New dietary preferences, fitness goals, etc.</p>
-        <textarea name="routineChanges" placeholder="e.g. Started a new diet, changed work schedule..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Any new hobbies, brands, or topics you've become interested in?</label>
-        <textarea name="newHobbiesInterests" placeholder="Things to keep on radar for future suggestions..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Any major milestones in the next 3-6 months?</label>
-        <p class="helper">Move, career change, big trip — where the assistant can help</p>
-        <textarea name="upcomingMilestones" placeholder="e.g. Moving house in April, holiday in June..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>Anything that's become a 'hard no' lately?</label>
-        <p class="helper">Airlines to avoid, brands you've lost trust in, etc.</p>
-        <textarea name="hardNos" placeholder="e.g. No longer using X airline..."></textarea>
+        <label>How would you rate your assistant's performance?</label>
+        <textarea name="assistantFeedback" placeholder="Feedback on communication, task handling, proactiveness..."></textarea>
       </div>
     </div>
 
@@ -531,6 +230,24 @@
     <div class="section">
       <div class="section-label">Referral</div>
       
+      <div class="field">
+        <label>How likely are you to recommend us to a friend? (1-10)</label>
+        <div class="score-slider" data-name="recommendLikelihoodScore">
+          <div class="score-options">
+            <button type="button" class="score-btn" data-value="1">1</button>
+            <button type="button" class="score-btn" data-value="2">2</button>
+            <button type="button" class="score-btn" data-value="3">3</button>
+            <button type="button" class="score-btn" data-value="4">4</button>
+            <button type="button" class="score-btn" data-value="5">5</button>
+            <button type="button" class="score-btn" data-value="6">6</button>
+            <button type="button" class="score-btn" data-value="7">7</button>
+            <button type="button" class="score-btn" data-value="8">8</button>
+            <button type="button" class="score-btn" data-value="9">9</button>
+            <button type="button" class="score-btn" data-value="10">10</button>
+          </div>
+        </div>
+      </div>
+
       <div class="field">
         <label>Would you recommend us to a friend?</label>
         <div class="pill-group" data-name="wouldRecommend">
@@ -553,48 +270,35 @@
       </div>
 
       <div class="field">
-        <label>How likely are you to recommend us? (1-10)</label>
-        <div class="score-slider" data-name="recommendLikelihoodScore">
-          <div class="score-options">
-            <button type="button" class="score-btn" data-value="1">1</button>
-            <button type="button" class="score-btn" data-value="2">2</button>
-            <button type="button" class="score-btn" data-value="3">3</button>
-            <button type="button" class="score-btn" data-value="4">4</button>
-            <button type="button" class="score-btn" data-value="5">5</button>
-            <button type="button" class="score-btn" data-value="6">6</button>
-            <button type="button" class="score-btn" data-value="7">7</button>
-            <button type="button" class="score-btn" data-value="8">8</button>
-            <button type="button" class="score-btn" data-value="9">9</button>
-            <button type="button" class="score-btn" data-value="10">10</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Would your business be interested in BlckBx as a benefit in kind?</label>
-        <div class="pill-group" data-name="businessInterested">
+        <label>Would your employer be interested in BlckBx as an employee benefit?</label>
+        <div class="pill-group" data-name="employerInterested">
           <div class="pill" data-value="Yes">Yes</div>
           <div class="pill" data-value="No">No</div>
           <div class="pill" data-value="Maybe">Maybe</div>
         </div>
-        <div class="conditional" id="businessContactDetails">
+        <div class="conditional" id="employerContactDetails">
           <div class="field-grid" style="margin-top: 12px;">
             <div class="field">
-              <label>Business Contact Name</label>
-              <input type="text" name="businessContactName" placeholder="Contact name">
+              <label>Employer Contact Name</label>
+              <input type="text" name="employerContactName" placeholder="Contact name">
             </div>
             <div class="field">
-              <label>Business Contact Phone</label>
-              <input type="tel" name="businessContactPhone" placeholder="+44 7700 000000">
+              <label>Employer Contact Phone</label>
+              <input type="tel" name="employerContactPhone" placeholder="+44 7700 000000">
             </div>
           </div>
         </div>
       </div>
+    </div>
 
+    <!-- Call Summary -->
+    <div class="section">
+      <div class="section-label">Call Summary</div>
+      
       <div class="field">
-        <label>General Call Summary</label>
+        <label>General notes from the call</label>
         <p class="helper">Any other useful information to enhance service</p>
-        <textarea name="generalCallSummary" placeholder="Overall notes from the call..." style="min-height: 120px;"></textarea>
+        <textarea name="callSummary" placeholder="Overall notes, action items, follow-ups..." style="min-height: 120px;"></textarea>
       </div>
     </div>
 
@@ -612,27 +316,9 @@
 <script>
 (function() {
   const state = {
-    clientId: null,
     scores: {},
-    pills: {},
-    selects: {},
-    multiSelects: {
-      positiveAppBuzzwords: new Set(),
-      negativeAppBuzzwords: new Set(),
-      positiveAssistantBuzzwords: new Set(),
-      negativeAssistantBuzzwords: new Set()
-    }
+    pills: {}
   };
-
-  // Get client ID from URL
-  const params = new URLSearchParams(window.location.search);
-  state.clientId = params.get('clientId') || params.get('email') || null;
-  
-  if (state.clientId) {
-    document.getElementById('clientBadge').innerHTML = '<span class="dot"></span> ' + state.clientId;
-  } else {
-    document.getElementById('clientBadge').innerHTML = '<span class="dot"></span> New Feedback';
-  }
 
   // Score sliders
   document.querySelectorAll('.score-slider').forEach(slider => {
@@ -660,109 +346,15 @@
         state.pills[name] = pill.dataset.value;
         
         // Handle conditionals
-        if (name === 'tasksDoingYourself') {
-          document.getElementById('tasksDoingYourselfDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
-        }
-        if (name === 'taskTookTooLong') {
-          document.getElementById('taskTookTooLongDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
-        }
         if (name === 'wouldRecommend') {
           document.getElementById('referralDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
         }
-        if (name === 'businessInterested') {
-          document.getElementById('businessContactDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
+        if (name === 'employerInterested') {
+          document.getElementById('employerContactDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
         }
       });
     });
   });
-
-  // Custom selects
-  document.querySelectorAll('.custom-select').forEach(select => {
-    const name = select.dataset.name;
-    const trigger = select.querySelector('.select-trigger');
-    const dropdown = select.querySelector('.select-dropdown');
-    const options = select.querySelectorAll('.select-option');
-    state.selects[name] = '';
-
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeAllDropdowns();
-      dropdown.classList.toggle('open');
-    });
-
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        state.selects[name] = opt.dataset.value;
-        trigger.textContent = opt.dataset.value;
-        trigger.classList.remove('placeholder');
-        dropdown.classList.remove('open');
-      });
-    });
-  });
-
-  // Multi-selects
-  document.querySelectorAll('.multi-select-wrap').forEach(wrapper => {
-    const name = wrapper.dataset.name;
-    const tagArea = wrapper.querySelector('.tag-area');
-    const dropdown = wrapper.querySelector('.multi-dropdown');
-    const options = wrapper.querySelectorAll('.multi-option');
-
-    tagArea.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeAllDropdowns();
-      dropdown.classList.toggle('open');
-      tagArea.classList.toggle('active', dropdown.classList.contains('open'));
-    });
-
-    options.forEach(opt => {
-      opt.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const val = opt.dataset.value;
-        if (state.multiSelects[name].has(val)) {
-          state.multiSelects[name].delete(val);
-          opt.classList.remove('selected');
-        } else {
-          state.multiSelects[name].add(val);
-          opt.classList.add('selected');
-        }
-        renderTags(name);
-      });
-    });
-  });
-
-  function renderTags(name) {
-    const wrapper = document.querySelector('.multi-select-wrap[data-name="' + name + '"]');
-    const tagArea = wrapper.querySelector('.tag-area');
-    const values = state.multiSelects[name];
-    tagArea.innerHTML = '';
-    if (values.size === 0) {
-      tagArea.innerHTML = '<span class="placeholder-text">Select feedback...</span>';
-      return;
-    }
-    values.forEach(val => {
-      const tag = document.createElement('span');
-      tag.className = 'tag';
-      const shortVal = val.length > 25 ? val.substring(0, 23) + '…' : val;
-      tag.innerHTML = shortVal + '<span class="remove-tag" data-val="' + val + '">&times;</span>';
-      tag.querySelector('.remove-tag').addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.multiSelects[name].delete(val);
-        const opt = wrapper.querySelector('.multi-option[data-value="' + val + '"]');
-        if (opt) opt.classList.remove('selected');
-        renderTags(name);
-      });
-      tagArea.appendChild(tag);
-    });
-  }
-
-  // Close all dropdowns
-  function closeAllDropdowns() {
-    document.querySelectorAll('.select-dropdown, .multi-dropdown').forEach(d => d.classList.remove('open'));
-    document.querySelectorAll('.tag-area').forEach(t => t.classList.remove('active'));
-  }
-  document.addEventListener('click', closeAllDropdowns);
 
   // Submit
   document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
@@ -775,43 +367,19 @@
       timestamp: new Date().toISOString(),
       firstName: form.firstName.value,
       lastName: form.lastName.value,
-      email: form.email.value,
-      phone: form.phone.value,
       assistantName: form.assistantName.value,
+      serviceFeedback: form.serviceFeedback.value,
       routineSimplifiedScore: state.scores.routineSimplifiedScore || '',
-      painPoints: form.painPoints.value,
-      tasksDoingYourself: state.pills.tasksDoingYourself || '',
-      tasksDoingYourselfDetails: form.tasksDoingYourselfDetails?.value || '',
-      firstThingInApp: form.firstThingInApp.value,
-      appEaseScore: state.scores.appEaseScore || '',
-      appImprovements: form.appImprovements.value,
-      positiveAppBuzzwords: [...state.multiSelects.positiveAppBuzzwords].join(', '),
-      negativeAppBuzzwords: [...state.multiSelects.negativeAppBuzzwords].join(', '),
-      appFeedbackSummary: form.appFeedbackSummary.value,
-      taskRightFirstTimePercent: state.selects.taskRightFirstTimePercent || '',
-      confidenceBigTaskScore: state.scores.confidenceBigTaskScore || '',
-      communicationToneFeedback: form.communicationToneFeedback.value,
-      assistantGetsPersonality: state.pills.assistantGetsPersonality || '',
-      communicationRatingScore: state.scores.communicationRatingScore || '',
-      acknowledgementSatisfied: state.pills.acknowledgementSatisfied || '',
-      taskTookTooLong: state.pills.taskTookTooLong || '',
-      taskTookTooLongDetails: form.taskTookTooLongDetails?.value || '',
-      assistantSuggestedSolutions: state.pills.assistantSuggestedSolutions || '',
-      positiveAssistantBuzzwords: [...state.multiSelects.positiveAssistantBuzzwords].join(', '),
-      negativeAssistantBuzzwords: [...state.multiSelects.negativeAssistantBuzzwords].join(', '),
-      assistantFeedbackSummary: form.assistantFeedbackSummary.value,
-      routineChanges: form.routineChanges.value,
-      newHobbiesInterests: form.newHobbiesInterests.value,
-      upcomingMilestones: form.upcomingMilestones.value,
-      hardNos: form.hardNos.value,
-      wouldRecommend: state.pills.wouldRecommend || '',
+      appFeedback: form.appFeedback.value,
+      assistantFeedback: form.assistantFeedback.value,
       recommendLikelihoodScore: state.scores.recommendLikelihoodScore || '',
+      wouldRecommend: state.pills.wouldRecommend || '',
       referralName: form.referralName?.value || '',
       referralPhone: form.referralPhone?.value || '',
-      businessInterested: state.pills.businessInterested || '',
-      businessContactName: form.businessContactName?.value || '',
-      businessContactPhone: form.businessContactPhone?.value || '',
-      generalCallSummary: form.generalCallSummary.value
+      employerInterested: state.pills.employerInterested || '',
+      employerContactName: form.employerContactName?.value || '',
+      employerContactPhone: form.employerContactPhone?.value || '',
+      callSummary: form.callSummary.value
     };
 
     btn.disabled = true;
@@ -819,8 +387,7 @@
     status.className = 'submit-status';
 
     try {
-      // TODO: Replace with your n8n webhook URL
-      const response = await fetch('https://n8n.blckbx.co.uk/webhook/feedback-sumbit', {
+      const response = await fetch('YOUR_N8N_WEBHOOK_URL', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
