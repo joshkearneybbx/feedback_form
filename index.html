@@ -262,6 +262,10 @@
               <input type="text" name="referralName" placeholder="Friend's name">
             </div>
             <div class="field">
+              <label>Referral Email</label>
+              <input type="email" name="referralEmail" placeholder="friend@email.com">
+            </div>
+            <div class="field full">
               <label>Referral Phone</label>
               <input type="tel" name="referralPhone" placeholder="+44 7700 000000">
             </div>
@@ -283,6 +287,10 @@
               <input type="text" name="employerContactName" placeholder="Contact name">
             </div>
             <div class="field">
+              <label>Employer Contact Email</label>
+              <input type="email" name="employerContactEmail" placeholder="contact@company.com">
+            </div>
+            <div class="field full">
               <label>Employer Contact Phone</label>
               <input type="tel" name="employerContactPhone" placeholder="+44 7700 000000">
             </div>
@@ -375,9 +383,11 @@
       recommendLikelihoodScore: state.scores.recommendLikelihoodScore || '',
       wouldRecommend: state.pills.wouldRecommend || '',
       referralName: form.referralName?.value || '',
+      referralEmail: form.referralEmail?.value || '',
       referralPhone: form.referralPhone?.value || '',
       employerInterested: state.pills.employerInterested || '',
       employerContactName: form.employerContactName?.value || '',
+      employerContactEmail: form.employerContactEmail?.value || '',
       employerContactPhone: form.employerContactPhone?.value || '',
       callSummary: form.callSummary.value
     };
