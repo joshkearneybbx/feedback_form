@@ -1,419 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlckBx — Client Feedback</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --white: #FFFFFF;
-    --base-black: #1D1C1B;
-    --black: #000000;
-    --cta: #E7C51C;
-    --cta-hover: #d4b418;
-    --sand-100: #F7F3F0;
-    --sand-200: #F1F1F0;
-    --sand-300: #E8E5E0;
-    --sand-400: #D0D8D0;
-    --sand-500: #CDC9BE;
-    --sand-600: #C0B9AE;
-    --sand-700: #AAA698;
-    --grey-100: #F0F0F0;
-    --grey-200: #C0C0C0;
-    --grey-300: #999797;
-    --grey-400: #686968;
-    --grey-500: #424242;
-    --grey-600: #2E2E2E;
-    --grey-700: #121212;
-    --green: #1EA868;
-    --error: #E33737;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --shadow-sm: 0 1px 3px rgba(29,28,27,0.06);
-    --shadow-md: 0 4px 12px rgba(29,28,27,0.08);
-    --shadow-lg: 0 8px 30px rgba(29,28,27,0.1);
-    --transition: 180ms ease;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'DM Sans', -apple-system, sans-serif;
-    background: linear-gradient(180deg, var(--sand-100) 0%, var(--sand-300) 100%);
-    min-height: 100vh;
-    color: var(--base-black);
-    -webkit-font-smoothing: antialiased;
-  }
-  .page-wrapper { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
-
-  /* Header */
-  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .logo img { height: 28px; }
-  .client-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--white); border: 1px solid var(--sand-300);
-    border-radius: 20px; padding: 6px 14px;
-    font-size: 12px; font-weight: 500; color: var(--grey-400);
-  }
-  .client-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
-  .page-subtitle { font-size: 14px; color: var(--grey-400); margin-bottom: 36px; }
-
-  /* Section Cards */
-  .section {
-    background: var(--white); border: 1px solid var(--sand-300);
-    border-radius: var(--radius-lg); padding: 28px 28px 24px;
-    margin-bottom: 20px; box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--transition);
-  }
-  .section:hover { box-shadow: var(--shadow-md); }
-  .section-label {
-    font-size: 11px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 1.2px; color: var(--grey-300); margin-bottom: 20px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--sand-300); }
-
-  /* Fields */
-  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .field-grid .full { grid-column: 1 / -1; }
-  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
-  .field:last-child { margin-bottom: 0; }
-  .field label { font-size: 12px; font-weight: 600; color: var(--grey-500); letter-spacing: 0.2px; }
-  .field label .optional { font-weight: 400; color: var(--grey-300); font-size: 11px; }
-  .field .helper { font-size: 11px; color: var(--grey-300); margin-top: 2px; }
-
-  input[type="text"], input[type="email"], input[type="tel"], textarea {
-    width: 100%; padding: 10px 14px; border: 1.5px solid var(--sand-300);
-    border-radius: var(--radius-sm); font-family: inherit; font-size: 14px;
-    color: var(--base-black); background: var(--sand-100);
-    transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
-    outline: none;
-  }
-  input:focus, textarea:focus {
-    border-color: var(--base-black); background: var(--white);
-    box-shadow: 0 0 0 3px rgba(29,28,27,0.06);
-  }
-  input::placeholder, textarea::placeholder { color: var(--grey-300); }
-  textarea { resize: vertical; min-height: 80px; }
-
-  /* Score Slider */
-  .score-slider { display: flex; flex-direction: column; gap: 8px; }
-  .score-options { display: flex; gap: 6px; flex-wrap: wrap; }
-  .score-btn {
-    width: 36px; height: 36px; border: 1.5px solid var(--sand-300);
-    border-radius: var(--radius-sm); background: var(--sand-100);
-    font-size: 13px; font-weight: 600; color: var(--grey-400);
-    cursor: pointer; transition: all var(--transition);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .score-btn:hover { border-color: var(--base-black); background: var(--white); }
-  .score-btn.active { background: var(--base-black); color: var(--white); border-color: var(--base-black); }
-
-  /* Pill Groups */
-  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
-  .pill {
-    padding: 8px 16px; border: 1.5px solid var(--sand-300);
-    border-radius: 20px; background: var(--sand-100);
-    font-size: 13px; font-weight: 500; color: var(--grey-500);
-    cursor: pointer; transition: all var(--transition);
-  }
-  .pill:hover { border-color: var(--base-black); background: var(--white); }
-  .pill.active { background: var(--base-black); color: var(--white); border-color: var(--base-black); }
-
-  /* Conditional */
-  .conditional { display: none; margin-top: 12px; }
-  .conditional.visible { display: block; }
-
-  /* Submit */
-  .submit-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
-  .btn-submit {
-    background: var(--cta); color: var(--base-black);
-    padding: 14px 32px; border: none; border-radius: var(--radius-sm);
-    font-family: inherit; font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: background var(--transition), transform var(--transition);
-  }
-  .btn-submit:hover { background: var(--cta-hover); }
-  .btn-submit:active { transform: scale(0.98); }
-  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-  .submit-status { font-size: 13px; color: var(--grey-400); }
-  .submit-status.success { color: var(--green); }
-  .submit-status.error { color: var(--error); }
-
-  @media (max-width: 600px) {
-    .field-grid { grid-template-columns: 1fr; }
-    .page-wrapper { padding: 24px 16px 60px; }
-    .section { padding: 20px 18px; }
-    .score-options { gap: 4px; }
-    .score-btn { width: 32px; height: 32px; font-size: 12px; }
-  }
-</style>
-</head>
-<body>
-<div class="page-wrapper">
-  <header class="header">
-    <div class="logo"><img src="BlckBx%20PNG.png" alt="BlckBx"></div>
-    <div class="client-badge" id="clientBadge"><span class="dot"></span> Client Feedback</div>
-  </header>
-  <p class="page-subtitle">Client feedback call — fill this out during the call, then submit to save.</p>
-
-  <form id="feedbackForm" autocomplete="off">
-
-    <!-- Contact Information -->
-    <div class="section">
-      <div class="section-label">Contact Information</div>
-      <div class="field-grid">
-        <div class="field">
-          <label>First Name</label>
-          <input type="text" name="firstName" placeholder="e.g. Sarah">
-        </div>
-        <div class="field">
-          <label>Last Name</label>
-          <input type="text" name="lastName" placeholder="e.g. Mitchell">
-        </div>
-        <div class="field full">
-          <label>Assistant Name</label>
-          <input type="text" name="assistantName" placeholder="e.g. Jessica">
-        </div>
-      </div>
-    </div>
-
-    <!-- Service Feedback - General -->
-    <div class="section">
-      <div class="section-label">Service Feedback — General</div>
-      
-      <div class="field">
-        <label>How are you finding the service overall?</label>
-        <textarea name="serviceFeedback" placeholder="Open-ended feedback about their experience with BlckBx..."></textarea>
-      </div>
-
-      <div class="field">
-        <label>On a scale of 1-10, how much has BlckBx simplified your daily routine?</label>
-        <div class="score-slider" data-name="routineSimplifiedScore">
-          <div class="score-options">
-            <button type="button" class="score-btn" data-value="1">1</button>
-            <button type="button" class="score-btn" data-value="2">2</button>
-            <button type="button" class="score-btn" data-value="3">3</button>
-            <button type="button" class="score-btn" data-value="4">4</button>
-            <button type="button" class="score-btn" data-value="5">5</button>
-            <button type="button" class="score-btn" data-value="6">6</button>
-            <button type="button" class="score-btn" data-value="7">7</button>
-            <button type="button" class="score-btn" data-value="8">8</button>
-            <button type="button" class="score-btn" data-value="9">9</button>
-            <button type="button" class="score-btn" data-value="10">10</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Service Feedback - App -->
-    <div class="section">
-      <div class="section-label">Service Feedback — App</div>
-      
-      <div class="field">
-        <label>How are you finding the app? Is it easy to use, any issues?</label>
-        <textarea name="appFeedback" placeholder="Feedback on the app experience, usability, any problems..."></textarea>
-      </div>
-    </div>
-
-    <!-- Service Feedback - Assistant -->
-    <div class="section">
-      <div class="section-label">Service Feedback — Assistant</div>
-      
-      <div class="field">
-        <label>How would you rate your assistant's performance?</label>
-        <textarea name="assistantFeedback" placeholder="Feedback on communication, task handling, proactiveness..."></textarea>
-      </div>
-    </div>
-
-    <!-- Referral -->
-    <div class="section">
-      <div class="section-label">Referral</div>
-      
-      <div class="field">
-        <label>How likely are you to recommend us to a friend? (1-10)</label>
-        <div class="score-slider" data-name="recommendLikelihoodScore">
-          <div class="score-options">
-            <button type="button" class="score-btn" data-value="1">1</button>
-            <button type="button" class="score-btn" data-value="2">2</button>
-            <button type="button" class="score-btn" data-value="3">3</button>
-            <button type="button" class="score-btn" data-value="4">4</button>
-            <button type="button" class="score-btn" data-value="5">5</button>
-            <button type="button" class="score-btn" data-value="6">6</button>
-            <button type="button" class="score-btn" data-value="7">7</button>
-            <button type="button" class="score-btn" data-value="8">8</button>
-            <button type="button" class="score-btn" data-value="9">9</button>
-            <button type="button" class="score-btn" data-value="10">10</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Would you recommend us to a friend?</label>
-        <div class="pill-group" data-name="wouldRecommend">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-          <div class="pill" data-value="Maybe">Maybe</div>
-        </div>
-        <div class="conditional" id="referralDetails">
-          <div class="field-grid" style="margin-top: 12px;">
-            <div class="field">
-              <label>Referral Name</label>
-              <input type="text" name="referralName" placeholder="Friend's name">
-            </div>
-            <div class="field">
-              <label>Referral Email</label>
-              <input type="email" name="referralEmail" placeholder="friend@email.com">
-            </div>
-            <div class="field full">
-              <label>Referral Phone</label>
-              <input type="tel" name="referralPhone" placeholder="+44 7700 000000">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Would your employer be interested in BlckBx as an employee benefit?</label>
-        <div class="pill-group" data-name="employerInterested">
-          <div class="pill" data-value="Yes">Yes</div>
-          <div class="pill" data-value="No">No</div>
-          <div class="pill" data-value="Maybe">Maybe</div>
-        </div>
-        <div class="conditional" id="employerContactDetails">
-          <div class="field-grid" style="margin-top: 12px;">
-            <div class="field">
-              <label>Employer Contact Name</label>
-              <input type="text" name="employerContactName" placeholder="Contact name">
-            </div>
-            <div class="field">
-              <label>Employer Contact Email</label>
-              <input type="email" name="employerContactEmail" placeholder="contact@company.com">
-            </div>
-            <div class="field full">
-              <label>Employer Contact Phone</label>
-              <input type="tel" name="employerContactPhone" placeholder="+44 7700 000000">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Call Summary -->
-    <div class="section">
-      <div class="section-label">Call Summary</div>
-      
-      <div class="field">
-        <label>General notes from the call</label>
-        <p class="helper">Any other useful information to enhance service</p>
-        <textarea name="callSummary" placeholder="Overall notes, action items, follow-ups..." style="min-height: 120px;"></textarea>
-      </div>
-    </div>
-
-    <!-- Submit -->
-    <div class="section">
-      <div class="submit-row">
-        <button type="submit" class="btn-submit" id="submitBtn">Submit Feedback</button>
-        <span class="submit-status" id="submitStatus"></span>
-      </div>
-    </div>
-
-  </form>
-</div>
-
-<script>
-(function() {
-  const state = {
-    scores: {},
-    pills: {}
-  };
-
-  // Score sliders
-  document.querySelectorAll('.score-slider').forEach(slider => {
-    const name = slider.dataset.name;
-    const buttons = slider.querySelectorAll('.score-btn');
-    state.scores[name] = '';
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        state.scores[name] = btn.dataset.value;
-      });
-    });
-  });
-
-  // Pill groups
-  document.querySelectorAll('.pill-group').forEach(group => {
-    const name = group.dataset.name;
-    const pills = group.querySelectorAll('.pill');
-    state.pills[name] = '';
-    pills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        pills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        state.pills[name] = pill.dataset.value;
-        
-        // Handle conditionals
-        if (name === 'wouldRecommend') {
-          document.getElementById('referralDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
-        }
-        if (name === 'employerInterested') {
-          document.getElementById('employerContactDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
-        }
-      });
-    });
-  });
-
-  // Submit
-  document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const status = document.getElementById('submitStatus');
-    const btn = document.getElementById('submitBtn');
-
-    const payload = {
-      timestamp: new Date().toISOString(),
-      firstName: form.firstName.value,
-      lastName: form.lastName.value,
-      assistantName: form.assistantName.value,
-      serviceFeedback: form.serviceFeedback.value,
-      routineSimplifiedScore: state.scores.routineSimplifiedScore || '',
-      appFeedback: form.appFeedback.value,
-      assistantFeedback: form.assistantFeedback.value,
-      recommendLikelihoodScore: state.scores.recommendLikelihoodScore || '',
-      wouldRecommend: state.pills.wouldRecommend || '',
-      referralName: form.referralName?.value || '',
-      referralEmail: form.referralEmail?.value || '',
-      referralPhone: form.referralPhone?.value || '',
-      employerInterested: state.pills.employerInterested || '',
-      employerContactName: form.employerContactName?.value || '',
-      employerContactEmail: form.employerContactEmail?.value || '',
-      employerContactPhone: form.employerContactPhone?.value || '',
-      callSummary: form.callSummary.value
-    };
-
-    btn.disabled = true;
-    status.textContent = 'Submitting…';
-    status.className = 'submit-status';
-
-    try {
-      const response = await fetch('https://n8n.blckbx.co.uk/webhook/feedback-sumbit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (!response.ok) throw new Error('Submit failed');
-      status.textContent = '✓ Feedback saved';
-      status.className = 'submit-status success';
-    } catch (err) {
-      status.textContent = 'Failed to save — try again';
-      status.className = 'submit-status error';
-      console.error(err);
-    } finally {
-      btn.disabled = false;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlckBx — Client Feedback</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --white: #FFFFFF;
+      --base-black: #1D1C1B;
+      --black: #000000;
+      --cta: #E7C51C;
+      --cta-hover: #d4b418;
+      --sand-100: #F7F3F0;
+      --sand-200: #F1F1F0;
+      --sand-300: #E8E5E0;
+      --sand-400: #D0D8D0;
+      --sand-500: #CDC9BE;
+      --sand-600: #C0B9AE;
+      --sand-700: #AAA698;
+      --grey-100: #F0F0F0;
+      --grey-200: #C0C0C0;
+      --grey-300: #999797;
+      --grey-400: #686968;
+      --grey-500: #424242;
+      --grey-600: #2E2E2E;
+      --grey-700: #121212;
+      --green: #1EA868;
+      --error: #E33737;
+      --warning: #E57C1C;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(29, 28, 27, 0.06);
+      --shadow-md: 0 4px 12px rgba(29, 28, 27, 0.08);
+      --shadow-lg: 0 8px 30px rgba(29, 28, 27, 0.1);
+      --transition: 180ms ease;
     }
-  });
-})();
-</script>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: linear-gradient(180deg, var(--sand-100) 0%, var(--sand-300) 100%);
+      min-height: 100vh;
+      color: var(--base-black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .logo img {
+      height: 28px;
+    }
+
+    .client-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      border: 1px solid var(--sand-300);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--grey-400);
+    }
+
+    .client-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .client-badge.offboarding .dot {
+      background: var(--warning);
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--grey-400);
+      margin-bottom: 36px;
+    }
+
+    /* Section Cards */
+    .section {
+      background: var(--white);
+      border: 1px solid var(--sand-300);
+      border-radius: var(--radius-lg);
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition);
+    }
+
+    .section:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--grey-300);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--sand-300);
+    }
+
+    /* Conditional Sections */
+    .section.hidden {
+      display: none;
+    }
+
+    /* Fields */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 16px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--grey-500);
+      letter-spacing: 0.2px;
+    }
+
+    .field label .optional {
+      font-weight: 400;
+      color: var(--grey-300);
+      font-size: 11px;
+    }
+
+    .field .helper {
+      font-size: 11px;
+      color: var(--grey-300);
+      margin-top: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--sand-300);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--base-black);
+      background: var(--sand-100);
+      transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--base-black);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(29, 28, 27, 0.06);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--grey-300);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* Score Slider */
+    .score-slider {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .score-options {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .score-btn {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--sand-300);
+      border-radius: var(--radius-sm);
+      background: var(--sand-100);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--grey-400);
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-btn:hover {
+      border-color: var(--base-black);
+      background: var(--white);
+    }
+
+    .score-btn.active {
+      background: var(--base-black);
+      color: var(--white);
+      border-color: var(--base-black);
+    }
+
+    /* Pill Groups */
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      padding: 8px 16px;
+      border: 1.5px solid var(--sand-300);
+      border-radius: 20px;
+      background: var(--sand-100);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--grey-500);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .pill:hover {
+      border-color: var(--base-black);
+      background: var(--white);
+    }
+
+    .pill.active {
+      background: var(--base-black);
+      color: var(--white);
+      border-color: var(--base-black);
+    }
+
+    /* Call Type Toggle */
+    .call-type-toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .call-type-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1.5px solid var(--sand-300);
+      border-radius: var(--radius-sm);
+      background: var(--sand-100);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--grey-500);
+      cursor: pointer;
+      transition: all var(--transition);
+      text-align: center;
+    }
+
+    .call-type-btn:hover {
+      border-color: var(--base-black);
+      background: var(--white);
+    }
+
+    .call-type-btn.active {
+      background: var(--cta);
+      color: var(--base-black);
+      border-color: var(--cta);
+    }
+
+    /* Conditional */
+    .conditional {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .conditional.visible {
+      display: block;
+    }
+
+    /* Submit */
+    .submit-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .btn-submit {
+      background: var(--cta);
+      color: var(--base-black);
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    .btn-submit:hover {
+      background: var(--cta-hover);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .submit-status {
+      font-size: 13px;
+      color: var(--grey-400);
+    }
+
+    .submit-status.success {
+      color: var(--green);
+    }
+
+    .submit-status.error {
+      color: var(--error);
+    }
+
+    @media (max-width: 600px) {
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-wrapper {
+        padding: 24px 16px 60px;
+      }
+
+      .section {
+        padding: 20px 18px;
+      }
+
+      .score-options {
+        gap: 4px;
+      }
+
+      .score-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+      }
+
+      .call-type-toggle {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="logo"><img src="BlckBx%20PNG.png" alt="BlckBx"></div>
+      <div class="client-badge" id="clientBadge"><span class="dot"></span> Client Feedback</div>
+    </header>
+    <p class="page-subtitle">Client feedback call — fill this out during the call, then submit to save.</p>
+
+    <form id="feedbackForm" autocomplete="off">
+
+      <!-- Call Type Selection -->
+      <div class="section">
+        <div class="section-label">Call Type</div>
+        <div class="call-type-toggle">
+          <button type="button" class="call-type-btn active" data-type="checkin">Check-in</button>
+          <button type="button" class="call-type-btn offboarding" data-type="offboarding">Offboarding</button>
+        </div>
+      </div>
+
+      <!-- Contact Information (Both) -->
+      <div class="section">
+        <div class="section-label">Contact Information</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" name="firstName" placeholder="e.g. Sarah">
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" name="lastName" placeholder="e.g. Mitchell">
+          </div>
+          <div class="field full">
+            <label>Assistant Name</label>
+            <input type="text" name="assistantName" placeholder="e.g. Jessica">
+          </div>
+        </div>
+      </div>
+
+      <!-- CHECK-IN SECTIONS -->
+
+      <!-- Service Feedback - General (Check-in only) -->
+      <div class="section checkin-only">
+        <div class="section-label">Service Feedback — General</div>
+
+        <div class="field">
+          <label>How are you finding the service overall?</label>
+          <textarea name="serviceFeedback"
+            placeholder="Open-ended feedback about their experience with BlckBx..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>On a scale of 1-10, how much has BlckBx simplified your daily routine?</label>
+          <div class="score-slider" data-name="routineSimplifiedScore">
+            <div class="score-options">
+              <button type="button" class="score-btn" data-value="1">1</button>
+              <button type="button" class="score-btn" data-value="2">2</button>
+              <button type="button" class="score-btn" data-value="3">3</button>
+              <button type="button" class="score-btn" data-value="4">4</button>
+              <button type="button" class="score-btn" data-value="5">5</button>
+              <button type="button" class="score-btn" data-value="6">6</button>
+              <button type="button" class="score-btn" data-value="7">7</button>
+              <button type="button" class="score-btn" data-value="8">8</button>
+              <button type="button" class="score-btn" data-value="9">9</button>
+              <button type="button" class="score-btn" data-value="10">10</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Feedback - App (Check-in only) -->
+      <div class="section checkin-only">
+        <div class="section-label">Service Feedback — App</div>
+
+        <div class="field">
+          <label>How are you finding the app? Is it easy to use, any issues?</label>
+          <textarea name="appFeedback"
+            placeholder="Feedback on the app experience, usability, any problems..."></textarea>
+        </div>
+      </div>
+
+      <!-- Service Feedback - Assistant (Check-in only) -->
+      <div class="section checkin-only">
+        <div class="section-label">Service Feedback — Assistant</div>
+
+        <div class="field">
+          <label>How would you rate your assistant's performance?</label>
+          <textarea name="assistantFeedback"
+            placeholder="Feedback on communication, task handling, proactiveness..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Would you be willing to provide a quote that we can use?</label>
+          <div class="pill-group" data-name="willingToQuote">
+            <div class="pill" data-value="Yes">Yes</div>
+            <div class="pill" data-value="No">No</div>
+          </div>
+          <div class="conditional" id="quoteDetails">
+            <textarea name="quoteText" placeholder="Enter their quote here..." style="margin-top: 12px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- OFFBOARDING SECTIONS -->
+
+      <!-- Offboarding Questions (Offboarding only) -->
+      <div class="section offboarding-only hidden">
+        <div class="section-label">Offboarding Feedback</div>
+
+        <div class="field">
+          <label>What were your initial drivers for signing up to BlckBx?</label>
+          <textarea name="initialDrivers" placeholder="Why did they join in the first place..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>What is the main reason you are ending your subscription?</label>
+          <textarea name="cancellationReason" placeholder="Primary reason for leaving..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>How would you rate your overall experience? (1-10)</label>
+          <div class="score-slider" data-name="overallExperienceScore">
+            <div class="score-options">
+              <button type="button" class="score-btn" data-value="1">1</button>
+              <button type="button" class="score-btn" data-value="2">2</button>
+              <button type="button" class="score-btn" data-value="3">3</button>
+              <button type="button" class="score-btn" data-value="4">4</button>
+              <button type="button" class="score-btn" data-value="5">5</button>
+              <button type="button" class="score-btn" data-value="6">6</button>
+              <button type="button" class="score-btn" data-value="7">7</button>
+              <button type="button" class="score-btn" data-value="8">8</button>
+              <button type="button" class="score-btn" data-value="9">9</button>
+              <button type="button" class="score-btn" data-value="10">10</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>How satisfied were you with your assistant's response times? (1-10)</label>
+          <div class="score-slider" data-name="responseTimeScore">
+            <div class="score-options">
+              <button type="button" class="score-btn" data-value="1">1</button>
+              <button type="button" class="score-btn" data-value="2">2</button>
+              <button type="button" class="score-btn" data-value="3">3</button>
+              <button type="button" class="score-btn" data-value="4">4</button>
+              <button type="button" class="score-btn" data-value="5">5</button>
+              <button type="button" class="score-btn" data-value="6">6</button>
+              <button type="button" class="score-btn" data-value="7">7</button>
+              <button type="button" class="score-btn" data-value="8">8</button>
+              <button type="button" class="score-btn" data-value="9">9</button>
+              <button type="button" class="score-btn" data-value="10">10</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>How accurate and helpful were the outputs? (1-10)</label>
+          <div class="score-slider" data-name="outputQualityScore">
+            <div class="score-options">
+              <button type="button" class="score-btn" data-value="1">1</button>
+              <button type="button" class="score-btn" data-value="2">2</button>
+              <button type="button" class="score-btn" data-value="3">3</button>
+              <button type="button" class="score-btn" data-value="4">4</button>
+              <button type="button" class="score-btn" data-value="5">5</button>
+              <button type="button" class="score-btn" data-value="6">6</button>
+              <button type="button" class="score-btn" data-value="7">7</button>
+              <button type="button" class="score-btn" data-value="8">8</button>
+              <button type="button" class="score-btn" data-value="9">9</button>
+              <button type="button" class="score-btn" data-value="10">10</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>How easy was the app to use? (1-10)</label>
+          <div class="score-slider" data-name="appEaseScore">
+            <div class="score-options">
+              <button type="button" class="score-btn" data-value="1">1</button>
+              <button type="button" class="score-btn" data-value="2">2</button>
+              <button type="button" class="score-btn" data-value="3">3</button>
+              <button type="button" class="score-btn" data-value="4">4</button>
+              <button type="button" class="score-btn" data-value="5">5</button>
+              <button type="button" class="score-btn" data-value="6">6</button>
+              <button type="button" class="score-btn" data-value="7">7</button>
+              <button type="button" class="score-btn" data-value="8">8</button>
+              <button type="button" class="score-btn" data-value="9">9</button>
+              <button type="button" class="score-btn" data-value="10">10</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Was there anything you expected to use the service for but didn't?</label>
+          <textarea name="unusedExpectations" placeholder="Things they thought they'd use but never did..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>What could we have done to prevent you from cancelling?</label>
+          <textarea name="preventionFeedback" placeholder="What would have made them stay..."></textarea>
+        </div>
+      </div>
+
+      <!-- Referral (Both) -->
+      <div class="section">
+        <div class="section-label">Referral</div>
+
+        <div class="field">
+          <label>How likely are you to recommend BlckBx to friends or colleagues? (1-10)</label>
+          <div class="score-slider" data-name="recommendLikelihoodScore">
+            <div class="score-options">
+              <button type="button" class="score-btn" data-value="1">1</button>
+              <button type="button" class="score-btn" data-value="2">2</button>
+              <button type="button" class="score-btn" data-value="3">3</button>
+              <button type="button" class="score-btn" data-value="4">4</button>
+              <button type="button" class="score-btn" data-value="5">5</button>
+              <button type="button" class="score-btn" data-value="6">6</button>
+              <button type="button" class="score-btn" data-value="7">7</button>
+              <button type="button" class="score-btn" data-value="8">8</button>
+              <button type="button" class="score-btn" data-value="9">9</button>
+              <button type="button" class="score-btn" data-value="10">10</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Would you recommend us to a friend?</label>
+          <div class="pill-group" data-name="wouldRecommend">
+            <div class="pill" data-value="Yes">Yes</div>
+            <div class="pill" data-value="No">No</div>
+            <div class="pill" data-value="Maybe">Maybe</div>
+          </div>
+          <div class="conditional" id="referralDetails">
+            <div class="field-grid" style="margin-top: 12px;">
+              <div class="field">
+                <label>Referral Name</label>
+                <input type="text" name="referralName" placeholder="Friend's name">
+              </div>
+              <div class="field">
+                <label>Referral Email</label>
+                <input type="email" name="referralEmail" placeholder="friend@email.com">
+              </div>
+              <div class="field full">
+                <label>Referral Phone</label>
+                <input type="tel" name="referralPhone" placeholder="+44 7700 000000">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Would your employer be interested in BlckBx as an employee benefit?</label>
+          <div class="pill-group" data-name="employerInterested">
+            <div class="pill" data-value="Yes">Yes</div>
+            <div class="pill" data-value="No">No</div>
+            <div class="pill" data-value="Maybe">Maybe</div>
+          </div>
+          <div class="conditional" id="employerContactDetails">
+            <div class="field-grid" style="margin-top: 12px;">
+              <div class="field">
+                <label>Employer Contact Name</label>
+                <input type="text" name="employerContactName" placeholder="Contact name">
+              </div>
+              <div class="field">
+                <label>Employer Contact Email</label>
+                <input type="email" name="employerContactEmail" placeholder="contact@company.com">
+              </div>
+              <div class="field full">
+                <label>Employer Contact Phone</label>
+                <input type="tel" name="employerContactPhone" placeholder="+44 7700 000000">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call Summary (Both) -->
+      <div class="section">
+        <div class="section-label">Call Summary</div>
+
+        <div class="field">
+          <label>General notes from the call</label>
+          <p class="helper">Any other useful information to enhance service</p>
+          <textarea name="callSummary" placeholder="Overall notes, action items, follow-ups..."
+            style="min-height: 120px;"></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="section">
+        <div class="submit-row">
+          <button type="submit" class="btn-submit" id="submitBtn">Submit Feedback</button>
+          <span class="submit-status" id="submitStatus"></span>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    (function () {
+      const WEBHOOK_URL = 'https://n8n.blckbx.co.uk/webhook/feedback-sumbit';
+
+      const state = {
+        callType: 'checkin',
+        scores: {},
+        pills: {}
+      };
+
+      // Call type toggle
+      const callTypeBtns = document.querySelectorAll('.call-type-btn');
+      const checkinSections = document.querySelectorAll('.checkin-only');
+      const offboardingSections = document.querySelectorAll('.offboarding-only');
+      const clientBadge = document.getElementById('clientBadge');
+
+      function updateCallType(type) {
+        state.callType = type;
+        callTypeBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.type === type);
+        });
+        checkinSections.forEach(s => s.classList.toggle('hidden', type !== 'checkin'));
+        offboardingSections.forEach(s => s.classList.toggle('hidden', type !== 'offboarding'));
+
+        if (type === 'offboarding') {
+          clientBadge.innerHTML = '<span class="dot"></span> Offboarding Call';
+          clientBadge.classList.add('offboarding');
+        } else {
+          clientBadge.innerHTML = '<span class="dot"></span> Check-in Call';
+          clientBadge.classList.remove('offboarding');
+        }
+      }
+
+      callTypeBtns.forEach(btn => {
+        btn.addEventListener('click', () => updateCallType(btn.dataset.type));
+      });
+
+      // Score sliders
+      document.querySelectorAll('.score-slider').forEach(slider => {
+        const name = slider.dataset.name;
+        const buttons = slider.querySelectorAll('.score-btn');
+        state.scores[name] = '';
+        buttons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.scores[name] = btn.dataset.value;
+          });
+        });
+      });
+
+      // Pill groups
+      document.querySelectorAll('.pill-group').forEach(group => {
+        const name = group.dataset.name;
+        const pills = group.querySelectorAll('.pill');
+        state.pills[name] = '';
+        pills.forEach(pill => {
+          pill.addEventListener('click', () => {
+            pills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            state.pills[name] = pill.dataset.value;
+
+            // Handle conditionals
+            if (name === 'wouldRecommend') {
+              document.getElementById('referralDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
+            }
+            if (name === 'employerInterested') {
+              document.getElementById('employerContactDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
+            }
+            if (name === 'willingToQuote') {
+              document.getElementById('quoteDetails').classList.toggle('visible', pill.dataset.value === 'Yes');
+            }
+          });
+        });
+      });
+
+      // Submit
+      document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const status = document.getElementById('submitStatus');
+        const btn = document.getElementById('submitBtn');
+
+        const payload = {
+          timestamp: new Date().toISOString(),
+          callType: state.callType,
+          firstName: form.firstName.value,
+          lastName: form.lastName.value,
+          assistantName: form.assistantName.value,
+
+          // Check-in fields
+          serviceFeedback: form.serviceFeedback?.value || '',
+          routineSimplifiedScore: state.scores.routineSimplifiedScore || '',
+          appFeedback: form.appFeedback?.value || '',
+          assistantFeedback: form.assistantFeedback?.value || '',
+          willingToQuote: state.pills.willingToQuote || '',
+          quoteText: form.quoteText?.value || '',
+
+          // Offboarding fields
+          initialDrivers: form.initialDrivers?.value || '',
+          cancellationReason: form.cancellationReason?.value || '',
+          overallExperienceScore: state.scores.overallExperienceScore || '',
+          responseTimeScore: state.scores.responseTimeScore || '',
+          outputQualityScore: state.scores.outputQualityScore || '',
+          appEaseScore: state.scores.appEaseScore || '',
+          unusedExpectations: form.unusedExpectations?.value || '',
+          preventionFeedback: form.preventionFeedback?.value || '',
+
+          // Shared fields
+          recommendLikelihoodScore: state.scores.recommendLikelihoodScore || '',
+          wouldRecommend: state.pills.wouldRecommend || '',
+          referralName: form.referralName?.value || '',
+          referralEmail: form.referralEmail?.value || '',
+          referralPhone: form.referralPhone?.value || '',
+          employerInterested: state.pills.employerInterested || '',
+          employerContactName: form.employerContactName?.value || '',
+          employerContactEmail: form.employerContactEmail?.value || '',
+          employerContactPhone: form.employerContactPhone?.value || '',
+          callSummary: form.callSummary.value
+        };
+
+        btn.disabled = true;
+        status.textContent = 'Submitting…';
+        status.className = 'submit-status';
+
+        try {
+          const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error('Submit failed');
+          status.textContent = '✓ Feedback saved';
+          status.className = 'submit-status success';
+        } catch (err) {
+          status.textContent = 'Failed to save — try again';
+          status.className = 'submit-status error';
+          console.error(err);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
 </body>
+
 </html>
