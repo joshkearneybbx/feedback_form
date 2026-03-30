@@ -833,11 +833,12 @@
           const response = await fetch(FETCH_WEBHOOK_URL + '?id=' + encodeURIComponent(id));
           const data = await response.json();
 
-          if (!data || data.error || !data.found) {
+          if (!data || data.error) {
             showError('Feedback not found');
             return;
           }
 
+          // Handle both wrapped ({ found: true, data: {...} }) and direct row format
           const feedbackData = data.data || data;
           enableViewMode(feedbackData);
         } catch (err) {
