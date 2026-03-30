@@ -878,8 +878,8 @@
         document.getElementById('callTypeSection').style.display = 'none';
         document.getElementById('submitSection').style.display = 'none';
 
-        // Determine call type and show correct sections
-        const callType = data.callType || 'checkin';
+        // Determine call type - check explicit field or infer from data
+        const callType = data.callType || (data.initialDrivers !== undefined ? 'offboarding' : 'checkin');
         state.callType = callType;
 
         const checkinSections = document.querySelectorAll('.checkin-only');
