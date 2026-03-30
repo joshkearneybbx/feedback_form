@@ -781,6 +781,23 @@
         </div>
       </div>
 
+      <!-- BlckBx Flex Offer (Offboarding only) -->
+      <div class="section offboarding-only hidden">
+        <div class="section-label">BlckBx Flex</div>
+
+        <div class="field">
+          <label>Would you like to try BlckBx Flex?</label>
+          <p class="helper">£250 + VAT for 15 tasks a year. It's a lighter plan that gives you access to support when
+            those bigger or unexpected admin jobs come up, without committing to a monthly subscription. Once you've
+            used up your 15 tasks you can just buy another bundle.</p>
+          <div class="pill-group" data-name="interestedInFlex" style="margin-top: 12px;">
+            <div class="pill" data-value="Yes">Yes</div>
+            <div class="pill" data-value="No">No</div>
+            <div class="pill" data-value="I'll think about it">I'll think about it</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Call Summary (Both) -->
       <div class="section">
         <div class="section-label">Call Summary</div>
@@ -926,7 +943,7 @@
         });
 
         // Pill groups
-        const pillFields = ['willingToQuote', 'wouldRecommend', 'employerInterested'];
+        const pillFields = ['willingToQuote', 'wouldRecommend', 'employerInterested', 'interestedInFlex'];
 
         pillFields.forEach(field => {
           if (data[field]) {
@@ -1059,6 +1076,7 @@
           appEaseScore: state.scores.appEaseScore || '',
           unusedExpectations: form.unusedExpectations?.value || '',
           preventionFeedback: form.preventionFeedback?.value || '',
+          interestedInFlex: state.pills.interestedInFlex || '',
 
           // Shared fields
           recommendLikelihoodScore: state.scores.recommendLikelihoodScore || '',
