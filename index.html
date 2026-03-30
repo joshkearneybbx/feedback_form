@@ -33,6 +33,7 @@
       --green: #1EA868;
       --error: #E33737;
       --warning: #E57C1C;
+      --view-mode: #6B7AE8;
       --radius-sm: 6px;
       --radius-md: 10px;
       --radius-lg: 16px;
@@ -96,6 +97,10 @@
 
     .client-badge.offboarding .dot {
       background: var(--warning);
+    }
+
+    .client-badge.view-mode .dot {
+      background: var(--view-mode);
     }
 
     .page-subtitle {
@@ -217,6 +222,20 @@
       min-height: 80px;
     }
 
+    /* View mode styles */
+    body.view-mode input,
+    body.view-mode textarea {
+      background: var(--white);
+      border-color: var(--sand-200);
+      cursor: default;
+    }
+
+    body.view-mode input:focus,
+    body.view-mode textarea:focus {
+      box-shadow: none;
+      border-color: var(--sand-200);
+    }
+
     /* Score Slider */
     .score-slider {
       display: flex;
@@ -257,6 +276,20 @@
       border-color: var(--base-black);
     }
 
+    body.view-mode .score-btn {
+      cursor: default;
+    }
+
+    body.view-mode .score-btn:hover {
+      border-color: var(--sand-300);
+      background: var(--sand-100);
+    }
+
+    body.view-mode .score-btn.active:hover {
+      background: var(--base-black);
+      border-color: var(--base-black);
+    }
+
     /* Pill Groups */
     .pill-group {
       display: flex;
@@ -284,6 +317,20 @@
     .pill.active {
       background: var(--base-black);
       color: var(--white);
+      border-color: var(--base-black);
+    }
+
+    body.view-mode .pill {
+      cursor: default;
+    }
+
+    body.view-mode .pill:hover {
+      border-color: var(--sand-300);
+      background: var(--sand-100);
+    }
+
+    body.view-mode .pill.active:hover {
+      background: var(--base-black);
       border-color: var(--base-black);
     }
 
@@ -376,6 +423,55 @@
       color: var(--error);
     }
 
+    /* Loading state */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(247, 243, 240, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .loading-overlay.hidden {
+      display: none;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--sand-300);
+      border-top-color: var(--base-black);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Error state */
+    .error-message {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .error-message h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--base-black);
+    }
+
+    .error-message p {
+      color: var(--grey-400);
+    }
+
     @media (max-width: 600px) {
       .field-grid {
         grid-template-columns: 1fr;
@@ -407,17 +503,22 @@
 </head>
 
 <body>
+  <div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
   <div class="page-wrapper">
     <header class="header">
       <div class="logo"><img src="BlckBx%20PNG.png" alt="BlckBx"></div>
       <div class="client-badge" id="clientBadge"><span class="dot"></span> Client Feedback</div>
     </header>
-    <p class="page-subtitle">Client feedback call — fill this out during the call, then submit to save.</p>
+    <p class="page-subtitle" id="pageSubtitle">Client feedback call — fill this out during the call, then submit to
+      save.</p>
 
     <form id="feedbackForm" autocomplete="off">
 
       <!-- Call Type Selection -->
-      <div class="section">
+      <div class="section" id="callTypeSection">
         <div class="section-label">Call Type</div>
         <div class="call-type-toggle">
           <button type="button" class="call-type-btn active" data-type="checkin">Check-in</button>
@@ -693,7 +794,7 @@
       </div>
 
       <!-- Submit -->
-      <div class="section">
+      <div class="section" id="submitSection">
         <div class="submit-row">
           <button type="submit" class="btn-submit" id="submitBtn">Submit Feedback</button>
           <span class="submit-status" id="submitStatus"></span>
@@ -705,21 +806,164 @@
 
   <script>
     (function () {
-      const WEBHOOK_URL = 'https://n8n.blckbx.co.uk/webhook/feedback-sumbit';
+      const SUBMIT_WEBHOOK_URL = 'https://n8n.blckbx.co.uk/webhook/feedback-sumbit';
+      const FETCH_WEBHOOK_URL = 'https://n8n.blckbx.co.uk/webhook/043ae001-1b58-4f27-9663-8a7e70a0b43f';
 
       const state = {
         callType: 'checkin',
+        viewMode: false,
         scores: {},
         pills: {}
       };
 
-      // Call type toggle
+      // Check for view mode
+      const params = new URLSearchParams(window.location.search);
+      const viewId = params.get('id');
+
+      if (viewId) {
+        state.viewMode = true;
+        loadFeedbackData(viewId);
+      }
+
+      async function loadFeedbackData(id) {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.classList.remove('hidden');
+
+        try {
+          const response = await fetch(FETCH_WEBHOOK_URL + '?id=' + encodeURIComponent(id));
+          const data = await response.json();
+
+          if (!data || data.error || !data.found) {
+            showError('Feedback not found');
+            return;
+          }
+
+          const feedbackData = data.data || data;
+          enableViewMode(feedbackData);
+        } catch (err) {
+          console.error('Failed to load feedback:', err);
+          showError('Failed to load feedback');
+        } finally {
+          loadingOverlay.classList.add('hidden');
+        }
+      }
+
+      function showError(message) {
+        document.querySelector('.page-wrapper').innerHTML = `
+          <header class="header">
+            <div class="logo"><img src="BlckBx%20PNG.png" alt="BlckBx"></div>
+          </header>
+          <div class="error-message">
+            <h2>${message}</h2>
+            <p>The feedback you're looking for doesn't exist or has been removed.</p>
+          </div>
+        `;
+      }
+
+      function enableViewMode(data) {
+        document.body.classList.add('view-mode');
+
+        // Update header
+        const clientBadge = document.getElementById('clientBadge');
+        clientBadge.innerHTML = '<span class="dot"></span> View Mode';
+        clientBadge.classList.add('view-mode');
+
+        // Update subtitle
+        const subtitle = document.getElementById('pageSubtitle');
+        const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString() : '';
+        subtitle.textContent = `Feedback submitted${timestamp ? ' on ' + timestamp : ''} — Read only`;
+
+        // Hide call type selector and submit button
+        document.getElementById('callTypeSection').style.display = 'none';
+        document.getElementById('submitSection').style.display = 'none';
+
+        // Determine call type and show correct sections
+        const callType = data.callType || 'checkin';
+        state.callType = callType;
+
+        const checkinSections = document.querySelectorAll('.checkin-only');
+        const offboardingSections = document.querySelectorAll('.offboarding-only');
+
+        checkinSections.forEach(s => s.classList.toggle('hidden', callType !== 'checkin'));
+        offboardingSections.forEach(s => s.classList.toggle('hidden', callType !== 'offboarding'));
+
+        // Populate form fields
+        const form = document.getElementById('feedbackForm');
+
+        // Text inputs
+        const textFields = [
+          'firstName', 'lastName', 'assistantName',
+          'serviceFeedback', 'appFeedback', 'assistantFeedback', 'quoteText',
+          'initialDrivers', 'cancellationReason', 'unusedExpectations', 'preventionFeedback',
+          'referralName', 'referralEmail', 'referralPhone',
+          'employerContactName', 'employerContactEmail', 'employerContactPhone',
+          'callSummary'
+        ];
+
+        textFields.forEach(field => {
+          const input = form.elements[field];
+          if (input && data[field]) {
+            input.value = data[field];
+            input.readOnly = true;
+          }
+        });
+
+        // Score sliders
+        const scoreFields = [
+          'routineSimplifiedScore', 'overallExperienceScore', 'responseTimeScore',
+          'outputQualityScore', 'appEaseScore', 'recommendLikelihoodScore'
+        ];
+
+        scoreFields.forEach(field => {
+          if (data[field]) {
+            const slider = document.querySelector(`.score-slider[data-name="${field}"]`);
+            if (slider) {
+              const btn = slider.querySelector(`.score-btn[data-value="${data[field]}"]`);
+              if (btn) btn.classList.add('active');
+            }
+          }
+        });
+
+        // Pill groups
+        const pillFields = ['willingToQuote', 'wouldRecommend', 'employerInterested'];
+
+        pillFields.forEach(field => {
+          if (data[field]) {
+            const group = document.querySelector(`.pill-group[data-name="${field}"]`);
+            if (group) {
+              const pill = group.querySelector(`.pill[data-value="${data[field]}"]`);
+              if (pill) pill.classList.add('active');
+
+              // Show conditionals
+              if (field === 'willingToQuote' && data[field] === 'Yes') {
+                document.getElementById('quoteDetails').classList.add('visible');
+              }
+              if (field === 'wouldRecommend' && data[field] === 'Yes') {
+                document.getElementById('referralDetails').classList.add('visible');
+              }
+              if (field === 'employerInterested' && data[field] === 'Yes') {
+                document.getElementById('employerContactDetails').classList.add('visible');
+              }
+            }
+          }
+        });
+
+        // Disable all interactions
+        document.querySelectorAll('input, textarea').forEach(el => el.readOnly = true);
+        document.querySelectorAll('.score-btn, .pill').forEach(el => {
+          el.style.pointerEvents = 'none';
+        });
+      }
+
+      // Call type toggle (only in edit mode)
       const callTypeBtns = document.querySelectorAll('.call-type-btn');
       const checkinSections = document.querySelectorAll('.checkin-only');
       const offboardingSections = document.querySelectorAll('.offboarding-only');
       const clientBadge = document.getElementById('clientBadge');
 
       function updateCallType(type) {
+        if (state.viewMode) return;
+
         state.callType = type;
         callTypeBtns.forEach(btn => {
           btn.classList.toggle('active', btn.dataset.type === type);
@@ -747,6 +991,7 @@
         state.scores[name] = '';
         buttons.forEach(btn => {
           btn.addEventListener('click', () => {
+            if (state.viewMode) return;
             buttons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             state.scores[name] = btn.dataset.value;
@@ -761,6 +1006,7 @@
         state.pills[name] = '';
         pills.forEach(pill => {
           pill.addEventListener('click', () => {
+            if (state.viewMode) return;
             pills.forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
             state.pills[name] = pill.dataset.value;
@@ -782,6 +1028,8 @@
       // Submit
       document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (state.viewMode) return;
+
         const form = e.target;
         const status = document.getElementById('submitStatus');
         const btn = document.getElementById('submitBtn');
@@ -829,7 +1077,7 @@
         status.className = 'submit-status';
 
         try {
-          const response = await fetch(WEBHOOK_URL, {
+          const response = await fetch(SUBMIT_WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
