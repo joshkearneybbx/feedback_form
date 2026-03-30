@@ -472,6 +472,40 @@
       color: var(--grey-400);
     }
 
+    /* Success state */
+    .success-message {
+      text-align: center;
+      padding: 80px 20px;
+      background: var(--white);
+      border: 1px solid var(--sand-300);
+      border-radius: var(--radius-lg);
+      margin-top: 40px;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--green);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+    }
+
+    .success-message h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: var(--base-black);
+    }
+
+    .success-message p {
+      color: var(--grey-400);
+      margin-bottom: 24px;
+    }
+
     @media (max-width: 600px) {
       .field-grid {
         grid-template-columns: 1fr;
@@ -1102,13 +1136,23 @@
             body: JSON.stringify(payload)
           });
           if (!response.ok) throw new Error('Submit failed');
-          status.textContent = '✓ Feedback saved';
-          status.className = 'submit-status success';
+
+          // Show success state
+          document.querySelector('.page-wrapper').innerHTML = `
+            <header class="header">
+              <div class="logo"><img src="BlckBx%20PNG.png" alt="BlckBx"></div>
+            </header>
+            <div class="success-message">
+              <div class="success-icon">✓</div>
+              <h2>Feedback submitted</h2>
+              <p>Thank you — the feedback for ${form.firstName.value} ${form.lastName.value} has been saved.</p>
+              <button class="btn-submit" onclick="window.location.href='/'">Submit another</button>
+            </div>
+          `;
         } catch (err) {
           status.textContent = 'Failed to save — try again';
           status.className = 'submit-status error';
           console.error(err);
-        } finally {
           btn.disabled = false;
         }
       });
